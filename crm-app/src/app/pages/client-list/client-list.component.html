@@ -1,0 +1,38 @@
+<div>
+  <h2>Lista Clienti</h2>
+  <table>
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nome</th>
+      <th>Email</th>
+      <th>Telefono</th>
+      <th>Azienda</th>
+      <th>Paese</th>
+      <th>Azioni</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let client of clients">
+      <td>{{ client.id }}</td>
+      <td>{{ client.name }}</td>
+      <td>{{ client.email }}</td>
+      <td>{{ client.phone }}</td>
+      <td>{{ client.company }}</td>
+      <td>{{ client.country }}</td>
+      <td>
+        <!-- Aggiungi pulsanti per modifica e eliminazione -->
+        <button (click)="editClient(client.id)">Modifica</button>
+        <button (click)="deleteClient(client.id)">Elimina</button>
+        <button (click)="viewClient(client.id)">Visualizza</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div>
+    <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">Precedente</button>
+    <span>Pagina {{ currentPage }} di {{ totalPages }}</span>
+    <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">Successivo</button>
+  </div>
+</div>
