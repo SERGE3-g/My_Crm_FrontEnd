@@ -1,8 +1,10 @@
 import { Routes } from '@angular/router';
-import {ClientComponent} from "./pages/client/client.component";
+
 
 export const routes: Routes = [
-  {path:'client',component:ClientComponent},
+
+  {path:'client',loadComponent:()=> import('./pages/client-list/client-list.component')},
+
   { path: '', redirectTo: 'home', pathMatch: 'full' },
 
 ];
