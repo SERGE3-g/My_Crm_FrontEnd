@@ -1,0 +1,26 @@
+.tasks {
+  padding: 20px;
+}
+
+.task-form {
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.table {
+  margin-top: 20px;
+}
+
+.pagination {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pagination button {
+  margin: 0 5px;
+}

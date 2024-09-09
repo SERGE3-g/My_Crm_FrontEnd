@@ -1,0 +1,67 @@
+<div class="tasks">
+  <h1>Gestione Task</h1>
+
+  <!-- Form per creare o modificare un task -->
+  <div class="task-form">
+    <h2 *ngIf="selectedTask">Modifica Task</h2>
+    <h2 *ngIf="!selectedTask">Crea Nuovo Task</h2>
+    <form (ngSubmit)="saveTask()">
+      <div class="form-group">
+        <label for="title">Titolo</label>
+        <input id="title" [(ngModel)]="selectedTask ? selectedTask.title : newTask.title" name="title" class="form-control" required />
+      </div>
+      <div class="form-group">
+        <label for="description">Descrizione</label>
+        <textarea id="description" [(ngModel)]="selectedTask ? selectedTask.description : newTask.description" name="description" class="form-control"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="dueDate">Data Scadenza</label>
+        <input id="dueDate" type="date" [(ngModel)]="selectedTask ? selectedTask.dueDate : newTask.dueDate" name="dueDate" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label for="status">Stato</label>
+        <select id="status" [(ngModel)]="selectedTask ? selectedTask.status : newTask.status" name="status" class="form-control">
+          <option value="Pending">Pending</option>
+          <option value="Completed">Completed</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary">Salva</button>
+      <button type="button" class="btn btn-secondary" (click)="resetForm()">Annulla</button>
+    </form>
+  </div>
+
+  <!-- Lista dei task -->
+  <div class="task-list">
+    <h2>Elenco Task</h2>
+    <table class="table">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Titolo</th>
+        <th>Descrizione</th>
+        <th>Data Scadenza</th>
+        <th>Stato</th>
+        <th>Azioni</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let task of tasks">
+        <td>{{ task.id }}</td>
+        <td>{{ task.title }}</td>
+        <td>{{ task.description }}</td>
+        <td>{{ task.dueDate | date }}</td>
+        <td>{{ task.status }}</td>
+        <td>
+          <button class="btn btn-sm btn-info" (click)="selectTask(task)">Modifica</button>
+          <button class="btn btn-sm btn-danger" (click)="deleteTask(task.id)">Elimina</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <button class="btn btn-secondary" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">Precedente</button>
+      <span>Pagina {{ currentPage }} di {{ totalPages }}</span>
+      <button class="btn btn-secondary" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">Successivo</button>
+    </div>
+  </div>
+</div>

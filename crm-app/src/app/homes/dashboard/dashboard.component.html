@@ -1,0 +1,21 @@
+<div class="dashboard">
+  <h1>Dashboard</h1>
+  <div class="stats">
+    <div class="card">
+      <h3>Total Clients</h3>
+      <p>{{ dashboardData.totalClients }}</p>
+    </div>
+    <div class="card">
+      <h3>Total Sales</h3>
+      <p>${{ dashboardData.totalSales | number }}</p>
+    </div>
+  </div>
+  <div class="activities">
+    <h2>Recent Activities</h2>
+    <ul>
+      <li *ngFor="let activity of dashboardData.recentActivities">
+        {{ activity }}
+      </li>
+    </ul>
+  </div>
+</div>

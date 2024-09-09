@@ -1,18 +1,22 @@
 import { Component } from '@angular/core';
 import {RouterLink, RouterLinkActive} from "@angular/router";
+import {NgClass} from "@angular/common";
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
   imports: [
     RouterLink,
-    RouterLinkActive
+    RouterLinkActive,
+    NgClass
   ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
+  isNavbarCollapsed = true;
 
-  protected readonly RouterLink = RouterLink;
-  protected readonly RouterLinkActive = RouterLinkActive;
+  toggleNavbar() {
+    this.isNavbarCollapsed = !this.isNavbarCollapsed;
+  }
 }

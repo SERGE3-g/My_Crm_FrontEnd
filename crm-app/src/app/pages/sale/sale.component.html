@@ -1,0 +1,67 @@
+<div class="sales">
+  <h1>Gestione Vendite</h1>
+
+  <!-- Form per creare o modificare una vendita -->
+  <div class="sale-form">
+    <h2 *ngIf="selectedSale">Modifica Vendita</h2>
+    <h2 *ngIf="!selectedSale">Crea Nuova Vendita</h2>
+    <form (ngSubmit)="saveSale()">
+      <div class="form-group">
+        <label for="product">Prodotto</label>
+        <input id="product" [(ngModel)]="selectedSale?.product || newSale.product" name="product" class="form-control" required />
+      </div>
+      <div class="form-group">
+        <label for="amount">Importo</label>
+        <input id="amount" type="number" [(ngModel)]="selectedSale?.amount || newSale.amount" name="amount" class="form-control" required />
+      </div>
+      <div class="form-group">
+        <label for="date">Data</label>
+        <input id="date" type="date" [(ngModel)]="selectedSale?.date || newSale.date" name="date" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label for="status">Stato</label>
+        <select id="status" [(ngModel)]="selectedSale?.status || newSale.status" name="status" class="form-control">
+          <option value="Pending">Pending</option>
+          <option value="Completed">Completed</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary">Salva</button>
+      <button type="button" class="btn btn-secondary" (click)="resetForm()">Annulla</button>
+    </form>
+  </div>
+
+  <!-- Lista delle vendite -->
+  <div class="sale-list">
+    <h2>Elenco Vendite</h2>
+    <table class="table">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Prodotto</th>
+        <th>Importo</th>
+        <th>Data</th>
+        <th>Stato</th>
+        <th>Azioni</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let sale of sales">
+        <td>{{ sale.id }}</td>
+        <td>{{ sale.product }}</td>
+        <td>{{ sale.amount }}</td>
+        <td>{{ sale.date | date }}</td>
+        <td>{{ sale.status }}</td>
+        <td>
+          <button class="btn btn-sm btn-info" (click)="selectSale(sale)">Modifica</button>
+          <button class="btn btn-sm btn-danger" (click)="deleteSale(sale.id)">Elimina</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <button class="btn btn-secondary" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">Precedente</button>
+      <span>Pagina {{ currentPage }} di {{ totalPages }}</span>
+      <button class="btn btn-secondary" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">Successivo</button>
+    </div>
+  </div>
+</div>
