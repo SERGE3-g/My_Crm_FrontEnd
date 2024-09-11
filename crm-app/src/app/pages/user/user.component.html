@@ -1,1 +1,72 @@
-<p>user works!</p>
+<div class="users">
+  <h1>Gestione Utenti</h1>
+
+  <!-- Form per creare o modificare un utente -->
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="username">Nome Utente</label>
+      <input id="username" formControlName="username" class="form-control" placeholder="Nome Utente" />
+      <div *ngIf="userForm.get('username')?.invalid && userForm.get('username')?.touched" class="text-danger">
+        Nome Utente è obbligatorio.
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input id="email" type="email" formControlName="email" class="form-control" placeholder="Email" />
+      <div *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched" class="text-danger">
+        Inserisci un'email valida.
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="role">Ruolo</label>
+      <select id="role" formControlName="role" class="form-control">
+        <option value="Admin">Admin</option>
+        <option value="User">User</option>
+      </select>
+    </div>
+    <div class="form-group" *ngIf="!isEditing">
+      <label for="password">Password</label>
+      <input id="password" type="password" formControlName="password" class="form-control" placeholder="Password" />
+      <div *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.touched" class="text-danger">
+        Password è obbligatoria.
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid">{{ isEditing ? 'Aggiorna Utente' : 'Crea Utente' }}</button>
+    <button type="button" class="btn btn-secondary" (click)="resetForm()">Annulla</button>
+  </form>
+
+  <!-- Lista degli utenti -->
+  <div class="user-list mt-4">
+    <h2>Elenco Utenti</h2>
+    <table class="table">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nome Utente</th>
+        <th>Email</th>
+        <th>Ruolo</th>
+        <th>Azioni</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{ user.id }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.role }}</td>
+        <td>
+          <button class="btn btn-sm btn-info" (click)="selectUser(user)">Modifica</button>
+          <button class="btn btn-sm btn-danger" (click)="deleteUser(user.id)">Elimina</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <!-- Paginazione -->
+    <div class="pagination">
+      <button class="btn btn-secondary" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">Precedente</button>
+      <span>Pagina {{ currentPage }} di {{ totalPages }}</span>
+      <button class="btn btn-secondary" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">Successivo</button>
+    </div>
+  </div>
+</div>

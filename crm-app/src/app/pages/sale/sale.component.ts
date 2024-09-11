@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Sale} from "../../models/sale";
 import {SaleService} from "../../services/sale.service";
-import {FormsModule} from "@angular/forms";
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {DatePipe, NgForOf, NgIf} from "@angular/common";
 
 @Component({
@@ -11,7 +11,8 @@ import {DatePipe, NgForOf, NgIf} from "@angular/common";
     FormsModule,
     NgIf,
     NgForOf,
-    DatePipe
+    DatePipe,
+    ReactiveFormsModule
   ],
   templateUrl: './sale.component.html',
   styleUrl: './sale.component.css'
@@ -19,19 +20,21 @@ import {DatePipe, NgForOf, NgIf} from "@angular/common";
 export default class SalesComponent implements OnInit {
 
   sales: Sale[] = [];
-  selectedSale: Sale | null = null;
-  newSale: Sale = {
-    id: 0,
-    amount: 0,
-    date: '',
-    clientId: 0,
-    product: '',
-    status: 'Pending'
-  };
+  saleForm: FormGroup;
+  isEditing: boolean = false;
+  selectedSaleId: number | null = null;
   currentPage: number = 1;
   totalPages: number = 1;
 
-  constructor(private saleService: SaleService) { }
+  constructor(private saleService: SaleService, private fb: FormBuilder) {
+    // Creazione del form con Reactive Forms
+    this.saleForm = this.fb.group({
+      product: ['', Validators.required],
+      amount: [0, [Validators.required, Validators.min(0)]],
+      date: ['', Validators.required],
+      status: ['Pending', Validators.required]
+    });
+  }
 
   ngOnInit(): void {
     this.loadSales();
@@ -45,22 +48,30 @@ export default class SalesComponent implements OnInit {
     });
   }
 
-  selectSale(sale: Sale): void {
-    this.selectedSale = { ...sale };
-  }
+  onSubmit(): void {
+    if (this.saleForm.invalid) {
+      return;
+    }
 
-  saveSale(): void {
-    if (this.selectedSale && this.selectedSale.id) {
-      this.saleService.updateSale(this.selectedSale.id, this.selectedSale).subscribe(() => {
+    const saleData: Sale = this.saleForm.value;
+
+    if (this.isEditing && this.selectedSaleId !== null) {
+      this.saleService.updateSale(this.selectedSaleId, saleData).subscribe(() => {
         this.loadSales(this.currentPage);
-        this.selectedSale = null;
+        this.resetForm();
       });
     } else {
-      this.saleService.createSale(this.newSale).subscribe(() => {
+      this.saleService.createSale(saleData).subscribe(() => {
         this.loadSales(this.currentPage);
-        this.newSale = { id: 0, amount: 0, date: '', clientId: 0, product: '', status: 'Pending' };
+        this.resetForm();
       });
     }
+  }
+
+  selectSale(sale: Sale): void {
+    this.isEditing = true;
+    this.selectedSaleId = sale.id;
+    this.saleForm.patchValue(sale);
   }
 
   deleteSale(id: number): void {
@@ -70,8 +81,14 @@ export default class SalesComponent implements OnInit {
   }
 
   resetForm(): void {
-    this.selectedSale = null;
-    this.newSale = { id: 0, amount: 0, date: '', clientId: 0, product: '', status: 'Pending' };
+    this.isEditing = false;
+    this.selectedSaleId = null;
+    this.saleForm.reset({
+      product: '',
+      amount: 0,
+      date: '',
+      status: 'Pending'
+    });
   }
 
   goToPage(page: number): void {

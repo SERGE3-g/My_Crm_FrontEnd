@@ -1,21 +1,42 @@
 <div class="dashboard">
   <h1>Dashboard</h1>
-  <div class="stats">
-    <div class="card">
-      <h3>Total Clients</h3>
-      <p>{{ dashboardData.totalClients }}</p>
+
+  <div class="stats-container">
+    <div class="stat-card">
+      <h3>Clienti Totali</h3>
+      <p>{{ totalClients }}</p>
     </div>
-    <div class="card">
-      <h3>Total Sales</h3>
-      <p>${{ dashboardData.totalSales | number }}</p>
+    <div class="stat-card">
+      <h3>Vendite Totali</h3>
+      <p>{{ totalSales }}</p>
+    </div>
+    <div class="stat-card">
+      <h3>Attività Totali</h3>
+      <p>{{ totalActivities }}</p>
+    </div>
+    <div class="stat-card">
+      <h3>Utenti Totali</h3>
+      <p>{{ totalUsers }}</p>
+    </div>
+    <div class="stat-card">
+      <h3>Task Totali</h3>
+      <p>{{ totalTasks }}</p>
     </div>
   </div>
-  <div class="activities">
-    <h2>Recent Activities</h2>
-    <ul>
-      <li *ngFor="let activity of dashboardData.recentActivities">
-        {{ activity }}
+
+  <div class="recent-activities">
+    <h2>Attività Recenti</h2>
+    <ul class="list-group">
+      <li class="list-group-item" *ngFor="let activity of recentActivities">
+        {{ activity.title }} - {{ activity.date | date }}
       </li>
     </ul>
+  </div>
+
+  <!-- Paginazione -->
+  <div class="pagination">
+    <button class="btn btn-secondary" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">Precedente</button>
+    <span>Pagina {{ currentPage }} di {{ totalPages }}</span>
+    <button class="btn btn-secondary" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">Successivo</button>
   </div>
 </div>

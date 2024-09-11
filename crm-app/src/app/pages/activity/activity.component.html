@@ -1,1 +1,78 @@
-<p>activity works!</p>
+<div class="activities">
+  <h1>Gestione Attività</h1>
+
+  <!-- Form per creare o modificare un'attività -->
+  <form [formGroup]="activityForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="title">Titolo</label>
+      <input id="title" formControlName="title" class="form-control" placeholder="Titolo dell'Attività" />
+      <div *ngIf="activityForm.get('title')?.invalid && activityForm.get('title')?.touched" class="text-danger">
+        Titolo è obbligatorio.
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="description">Descrizione</label>
+      <textarea id="description" formControlName="description" class="form-control" placeholder="Descrizione dell'Attività"></textarea>
+    </div>
+    <div class="form-group">
+      <label for="date">Data</label>
+      <input id="date" type="date" formControlName="date" class="form-control" />
+      <div *ngIf="activityForm.get('date')?.invalid && activityForm.get('date')?.touched" class="text-danger">
+        Data è obbligatoria.
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="clientId">ID Cliente</label>
+      <input id="clientId" type="number" formControlName="clientId" class="form-control" placeholder="ID Cliente" />
+      <div *ngIf="activityForm.get('clientId')?.invalid && activityForm.get('clientId')?.touched" class="text-danger">
+        ID Cliente è obbligatorio.
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="type">Tipo</label>
+      <input id="type" formControlName="type" class="form-control" placeholder="Tipo di Attività" />
+      <div *ngIf="activityForm.get('type')?.invalid && activityForm.get('type')?.touched" class="text-danger">
+        Tipo è obbligatorio.
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary" [disabled]="activityForm.invalid">{{ isEditing ? 'Aggiorna Attività' : 'Crea Attività' }}</button>
+    <button type="button" class="btn btn-secondary" (click)="resetForm()">Annulla</button>
+  </form>
+
+  <!-- Lista delle attività -->
+  <div class="activity-list mt-4">
+    <h2>Elenco Attività</h2>
+    <table class="table">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Titolo</th>
+        <th>Descrizione</th>
+        <th>Data</th>
+        <th>Tipo</th>
+        <th>Azioni</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let activity of activities">
+        <td>{{ activity.id }}</td>
+        <td>{{ activity.title }}</td>
+        <td>{{ activity.description }}</td>
+        <td>{{ activity.date | date }}</td>
+        <td>{{ activity.type }}</td>
+        <td>
+          <button class="btn btn-sm btn-info" (click)="selectActivity(activity)">Modifica</button>
+          <button class="btn btn-sm btn-danger" (click)="deleteActivity(activity.id)">Elimina</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <!-- Paginazione -->
+    <div class="pagination">
+      <button class="btn btn-secondary" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">Precedente</button>
+      <span>Pagina {{ currentPage }} di {{ totalPages }}</span>
+      <button class="btn btn-secondary" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">Successivo</button>
+    </div>
+  </div>
+</div>
